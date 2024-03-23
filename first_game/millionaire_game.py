@@ -103,88 +103,92 @@ questions = [
 
 import random
 
+def main():
 
-def get_content(filename):
-    f = open(filename)
-    return f.read()
-
-
-def get_lines(filename):
-    f = open(filename)
-    return f.readlines()
+    def get_content(filename):
+        f = open(filename)
+        return f.read()
 
 
-def ask_question():
-    random_question = random.choice(questions)
-    random_key = random_question["Question"]
-    print("Question: ", random_key)
-    answer = input("Answer:  ")
-    return random_question, answer.lower()
+    def get_lines(filename):
+        f = open(filename)
+        return f.readlines()
 
 
-def update_xp(xp, earned_xp):
-    xp += earned_xp
-    print(True)
-    print(xp, "XP")
-    return xp
+    def ask_question():
+        random_question = random.choice(questions)
+        random_key = random_question["Question"]
+        print("Question: ", random_key)
+        answer = input("Answer:  ")
+        return random_question, answer.lower()
 
 
-def calculate_level(xp):
-    if xp == 0:
-        return " 0"
-    elif 0 < xp <= 25:
-        return " 1"
-    elif 26 <= xp <= 50:
-        return " 2"
-    elif 51 <= xp <= 100:
-        return " 3"
-    elif 101 <= xp <= 150:
-        return " 4"
-    elif 151 <= xp <= 200:
-        return " 5"
-    elif 201 <= xp <= 250:
-        return " 6"
+    def update_xp(xp, earned_xp):
+        xp += earned_xp
+        print(True)
+        print(xp, "XP")
+        return xp
 
 
-def record_players(name, xp):
-    with open("top.txt", "a") as f:
-        f.write(f"{name} {xp}\n")
+    def calculate_level(xp):
+        if xp == 0:
+            return " 0"
+        elif 0 < xp <= 25:
+            return " 1"
+        elif 26 <= xp <= 50:
+            return " 2"
+        elif 51 <= xp <= 100:
+            return " 3"
+        elif 101 <= xp <= 150:
+            return " 4"
+        elif 151 <= xp <= 200:
+            return " 5"
+        elif 201 <= xp <= 250:
+            return " 6"
 
 
-def sort_players():
-    with open("top.txt", "r") as f:
-        players = f.readlines()
-    players.sort(key=lambda x: int(x.split()[1]), reverse=True)
-    with open("top.txt", "w") as f:
-        for player in players:
-            f.write(player)
+    def record_players(name, xp):
+        with open("top.txt", "a") as f:
+            f.write(f"{name} {xp}\n")
 
 
-name = input('Enter your name: ')
-print('Welcome', name)
-print()
+    def sort_players():
+        with open("top.txt", "r") as f:
+            players = f.readlines()
+        players.sort(key=lambda x: int(x.split()[1]), reverse=True)
+        with open("top.txt", "w") as f:
+            for player in players:
+                f.write(player)
 
 
-def play_game():
-    xp = 0
-    count = 0
-    while count != 11:
-        count += 1
-        question, answer = ask_question()
-        if answer == question["Answer"]:
-            xp = update_xp(xp, question["XP"])
-        else:
+    name = input('Enter your name: ')
+    print('Welcome', name)
+    print()
+
+
+    def play_game():
+        xp = 0
+        count = 0
+        while count != 11:
+            count += 1
+            question, answer = ask_question()
+            if answer == question["Answer"]:
+                xp = update_xp(xp, question["XP"])
+            else:
+                player_lvl = calculate_level(xp)
+                print(f"You gathered {xp}XP")
+                print(f"Your level is {player_lvl}")
+                record_players(name, xp)
+                return
             player_lvl = calculate_level(xp)
-            print(f"You gathered {xp}XP")
-            print(f"Your level is {player_lvl}")
-            record_players(name, xp)
-            return
-        player_lvl = calculate_level(xp)
-        print(player_lvl)
+            print(player_lvl)
 
-    print(f"You gathered {xp}XP")
-    record_players(name, xp)
+        print(f"You gathered {xp}XP")
+        record_players(name, xp)
 
 
-play_game()
-sort_players()
+    play_game()
+    sort_players()
+
+if __name__ == "__main__":
+    main()
